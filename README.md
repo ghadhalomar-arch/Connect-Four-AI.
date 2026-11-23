@@ -177,7 +177,6 @@ One group member submits the required files through **Blackboard**.
 - **Aryam Alshahri** — اريام الشهري
 
 
-*English spellings are transliterations and can be adjusted to match the authors' official preferred spellings.*
 
 ## © Copyright & Academic License
 
