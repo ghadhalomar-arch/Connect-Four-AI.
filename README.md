@@ -117,10 +117,5 @@ All members contribute to the written report, testing, presentation, and final r
 
 Only **one group member** submits the final deliverables through Blackboard.
 
-## Course Copyright Notice
-
-If publishing this project online, add the copyright notice provided in the official CS1360 project instructions to your source code, replacing `[YEAR]` and `[AUTHOR NAME]` with the correct details. The course notice limits use to educational and non-commercial research with attribution.
-
----
 
 *Developed for the CS1360 Artificial Intelligence course at Imam Mohammad Ibn Saud Islamic University.*
