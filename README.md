@@ -182,7 +182,7 @@ One group member submits the required files through **Blackboard**.
 
 The following notice follows the **course-specific copyright text provided in the CS1360 project instructions**, with the year and author names filled in. It is **not a general-purpose open-source license**.
 
-> **Copyright (CC) 2026 Sadeem Alnahdi, Ghada Alomar, Aryam Alshahri, and Aadi Alshamma**
+> **Copyright (CC) 2026 Sadeem Alnahdi, Ghada Alomar, Aryam Alshahri, **
 >
 > This software was developed as part of a project for CS1360 course at Imam Mohammad ibn Saud Islamic University.
 >
