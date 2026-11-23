@@ -175,7 +175,7 @@ One group member submits the required files through **Blackboard**.
 - **Sadeem Alnahdi** — سديم النهدي
 - **Ghada Alomar** — غاده العمر
 - **Aryam Alshahri** — اريام الشهري
-- **Aadi Alshamma** — عادي الشمه
+
 
 *English spellings are transliterations and can be adjusted to match the authors' official preferred spellings.*
 
