@@ -1,1 +1,9 @@
+# Dependencies for the planned Python implementation.
+# NumPy: 6x7 board representation and array operations.
+numpy>=1.26,<3.0
+
+# Matplotlib: experimental result charts for the report.
+matplotlib>=3.8,<4.0
+
+# random, math, time, and copy are built into Python.
 
