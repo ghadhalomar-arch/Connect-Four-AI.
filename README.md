@@ -192,7 +192,6 @@ The following notice follows the **course-specific copyright text provided in th
 >
 > This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 >
-> The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 > [!IMPORTANT]
 > The project instructions request that this copyright notice also be **added to the code when publishing the project online**. The current Java files are intentionally empty; the notice can be inserted when source development begins.
