@@ -1,130 +1,115 @@
 
 public class Experiments {
 
-	public static void alphaBetaVsAlphaBeta(int maxDepth, int minDepth) {
+    public static void alphaBetaVsAlphaBeta(int maxDepth, int minDepth) {
 
-		// Create and initialize an empty Connect Four board
-		ConnectFourGame game = new ConnectFourGame();
-		game.initiallizeBoard();
+        // Initialize the game
+        ConnectFourGame game = new ConnectFourGame();
+        game.initiallizeBoard();
 
-		// Create two AI agents with different search depth
-		Alpha_Beta maxAI = new Alpha_Beta(maxDepth);
-		Alpha_Beta minAI = new Alpha_Beta(minDepth);
+        // Create two AI agents
+        Alpha_Beta maxAI = new Alpha_Beta(maxDepth);
+        Alpha_Beta minAI = new Alpha_Beta(minDepth);
 
-		int currentPlayer = 1; // Max --> player 1 starts the game
-		int moveCount = 0; // total of moves played in the game
+        int currentPlayer = 1;
 
-		// Total decision time for each agent
-		long maxTotalTime = 0;
-		long minTotalTime = 0;
+        // Total decision time for each agent
+        long maxTotalTime = 0;
+        long minTotalTime = 0;
 
-		// # of moves played by each agent
-		int maxMoves = 0;
-		int minMoves = 0;
+        // Number of moves for each agent
+        int maxMoves = 0;
+        int minMoves = 0;
 
-		long startTime = System.nanoTime(); // Start time of the experiments
+        long startTime = System.nanoTime();
 
-		while (!game.checkWinner(1) && !game.checkWinner(2) && !game.isDraw()) { // game loop
+        // Game loop
+        while (!game.checkWinner(1) && !game.checkWinner(2) && !game.isDraw()) {
 
-			int bestColumn; // Stores the column selected by the agent
+            int bestColumn;
+            long moveStartTime = System.nanoTime();
 
-			long moveStartTime = System.nanoTime(); // Calculates how long an agent takes to make a decision- Start
+            // Select a column
+            if (currentPlayer == 1) {
+                bestColumn = maxAI.chooseMove(game, 1);
+            } else {
+                bestColumn = minAI.chooseMove(game, 2);
+            }
 
-			// Who's turn to play
-			if (currentPlayer == 1) { // Max turn
+            // Calculate decision time
+            long moveEndTime = System.nanoTime();
+            long decisionTime = moveEndTime - moveStartTime;
 
-				bestColumn = maxAI.chooseMove(game, 1);
+            // Check if the column is valid
+            if (!game.isValidMove(bestColumn)) {
+                System.out.println("Error: Invalid move");
+                return;
+            }
 
-			} else { // Min turn
+            game.makeMove(bestColumn, currentPlayer);
 
-				bestColumn = minAI.chooseMove(game, 2);
-			}
+            // Update the time and move count for each player
+            if (currentPlayer == 1) {
+                maxTotalTime += decisionTime;
+                maxMoves++;
+            } else {
+                minTotalTime += decisionTime;
+                minMoves++;
+            }
 
-			long moveEndTime = System.nanoTime(); // Calculates how long an agent takes to make a decision- End
+            // Display the move and board
+            System.out.println("Move " + (maxMoves + minMoves)
+                    + ": Player " + currentPlayer
+                    + " selected column " + bestColumn);
 
-			long decisionTime = moveEndTime - moveStartTime; // Calculates the decision time
+            game.displayBoard();
 
-			// Calculate decision time for each agent
-			if (currentPlayer == 1) {
+            // Switch players
+            if (currentPlayer == 1) {
+                currentPlayer = 2;
+            } else {
+                currentPlayer = 1;
+            }
+        }
 
-				maxTotalTime += decisionTime;
+        // Calculate total game time in seconds
+        long endTime = System.nanoTime();
+        double totalGameTime = (endTime - startTime) / 1000000000.0;
 
-			} else {
+        // Determine the winner
+        String result;
 
-				minTotalTime += decisionTime;
-			}
+        if (game.checkWinner(1)) {
+            result = "MAX wins (Depth " + maxDepth + ")";
+        } else if (game.checkWinner(2)) {
+            result = "MIN wins (Depth " + minDepth + ")";
+        } else {
+            result = "Draw";
+        }
 
-			// is the column valid?
-			if (!game.isValidMove(bestColumn)) {
-				System.out.println("Error: AI selected an invalid move.");
-				return;
-			}
+        // Calculate average decision time in milliseconds
+        double maxAverageTime = 0;
+        double minAverageTime = 0;
 
-			// Place the current's player decision in the board
-			game.makeMove(bestColumn, currentPlayer);
+        if (maxMoves > 0) {
+            maxAverageTime = (maxTotalTime / 1000000.0) / maxMoves;
+        }
 
-			moveCount++;
+        if (minMoves > 0) {
+            minAverageTime = (minTotalTime / 1000000.0) / minMoves;
+        }
 
-			if (currentPlayer == 1) {
-				maxMoves++;
-			} else {
-				minMoves++;
-			}
-
-			System.out.println("Move " + moveCount + ": Player " + currentPlayer + " selected column " + bestColumn);
-
-			game.displayBoard();
-
-			// Switch players
-			if (currentPlayer == 1) {
-				currentPlayer = 2;
-			} else {
-				currentPlayer = 1;
-			}
-		}
-
-		long endTime = System.nanoTime(); // End time of the experiment
-
-		double totalGameTime = (endTime - startTime) / 1000000000.0; // Calculating the total time of the game
-
-		String result;
-
-		if (game.checkWinner(1)) {
-			result = "MAX wins (Depth " + maxDepth + ")";
-		} else if (game.checkWinner(2)) {
-			result = "MIN wins (Depth " + minDepth + ")";
-		} else {
-			result = "Draw";
-		}
-
-		double maxAverageTime = 0;
-		double minAverageTime = 0;
-
-		if (maxMoves > 0) {
-			maxAverageTime = (maxTotalTime / 1000000.0) / maxMoves;
-		}
-
-		if (minMoves > 0) {
-			minAverageTime = (minTotalTime / 1000000.0) / minMoves;
-		}
-
-		// Printing
-		System.out.println("\n===== EXPERIMENT RESULTS =====");
-
-		System.out.println("MAX depth: " + maxDepth);
-		System.out.println("MIN depth: " + minDepth);
-
-		System.out.println("Result: " + result);
-
-		System.out.println("Total moves: " + moveCount);
-		System.out.println("MAX moves: " + maxMoves);
-		System.out.println("MIN moves: " + minMoves);
-
-		System.out.println("Total game time: " + totalGameTime + " seconds");
-
-		System.out.println("MAX average decision time: " + maxAverageTime + " ms");
-		System.out.println("MIN average decision time: " + minAverageTime + " ms");
-
-		System.out.println("==============================");
-	}
+        // Print results
+        System.out.println("\n===== EXPERIMENT RESULTS =====");
+        System.out.println("MAX depth: " + maxDepth);
+        System.out.println("MIN depth: " + minDepth);
+        System.out.println("Result: " + result);
+        System.out.println("Total moves: " + (maxMoves + minMoves));
+        System.out.println("MAX moves: " + maxMoves);
+        System.out.println("MIN moves: " + minMoves);
+        System.out.println("Total game time: " + totalGameTime + " seconds");
+        System.out.println("MAX average decision time: " + maxAverageTime + " ms");
+        System.out.println("MIN average decision time: " + minAverageTime + " ms");
+        System.out.println("==============================");
+    }
 }
