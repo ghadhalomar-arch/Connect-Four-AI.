@@ -1,244 +1,256 @@
+
 public class Alpha_Beta {
 
-	// # of board rows & columns
-	private static final int rows = 6;
-	private static final int cols = 7;
-	
-	private static final int empty = 0; //Empty state
-	private static final int max = 1; //Yellow player, maximizing the score.
-	private static final int min = 2; //Red player, minimizing the score.
-	private int depth; //Maximum search depth
-	
-	//constructor
-	public Alpha_Beta(int depth) { 
+    // Board dimensions
+    private static final int rows = 6;
+    private static final int cols = 7;
+
+    // Board values
+    private static final int empty = 0;
+    private static final int max = 1;
+    private static final int min = 2;
+
+    private int depth;
+
+    // Constructor
+    public Alpha_Beta(int depth) {
         this.depth = depth;
     }
-	
-	
-	//Score a group of four cells.
-	public int evaluateFourCells(int[] fourCells){
-		
-		int maxCount = 0;
-	    int minCount = 0;
-	    int emptyCount = 0;
-	    
-	    //Count how many max & min tokens & empty cells exist in a group of four cells window.
-	    for(int i=0; i < fourCells.length; i++) {
-	    	if(fourCells[i] == max) {
-	    		maxCount ++;}
-	    	if(fourCells[i] == min) {
-	    		minCount ++;}
-	    	if(fourCells[i] == empty) {
-	    		emptyCount ++;}
-	    }
-	    
-	 // Max evaluation
-	    if (maxCount == 4) {
-	        return 10000;}
-	     else if (maxCount == 3 && emptyCount == 1) {
-	        return 100;} 
-	    else if (maxCount == 2 && emptyCount == 2) {
-	        return 10;}
-	    
-	    // Min evaluation
-	    if (minCount == 4) { 
-	        return -10000;}
-	     else if (minCount == 3 && emptyCount == 1) {
-	        return -100;}
-	     else if (minCount == 2 && emptyCount == 2) {
-	        return -10;}
-	   
-		return 0; // Returns a neutral score when none of the previous conditions were satisfied.
-		}
-	
-	//Calculate the heuristic score of the entire board.
-	public int evaluateBoard(int[][] board){
-			
-		int score = 0;
 
-		// Horizontal evaluation
-		for (int row = 0; row < rows; row++) {
-			/* "-3" because each window contains four cells if we reach.
-			 * if we start at col 4 we would go out of bound of the array/board
-			 */
-		    for (int col = 0; col < cols - 3; col++) { // Stop at column = 3
+    // Evaluate a group of four cells
+    public int evaluateFourCells(int[] fourCells) {
 
-		        int[] window = 
-		           {board[row][col],
-		            board[row][col + 1],
-		            board[row][col + 2],
-		            board[row][col + 3]};
-		        	
-		        score += evaluateFourCells(window);
-		    }
-		}
-		
-		// Vertical evaluation
-		for (int row = 0; row < rows - 3; row++) {
-			for (int col = 0; col < cols; col++) { // Stop at column = 3
+        int maxCount = 0;
+        int minCount = 0;
+        int emptyCount = 0;
 
-		        int[] window = 
-		           {board[row][col],
-		            board[row + 1][col],
-		            board[row + 2][col],
-		            board[row + 3][col]};
-		        	
-		        score += evaluateFourCells(window);
-		    }
-		}
-		
-		// Diagonal down-right evaluation
-		for (int row = 0; row < rows - 3; row++) { // Stop at row = 2
-		    for (int col = 0; col < cols - 3; col++) { // Stop at column = 3
+        // Count MAX, MIN and empty cells
+        for (int i = 0; i < fourCells.length; i++) {
 
-		        int[] window = 
-		           {board[row][col],
-		            board[row + 1][col + 1],
-		            board[row + 2][col + 2],
-		            board[row + 3][col + 3]};
-		        	
-		        score += evaluateFourCells(window);
-		    }
-		}
-		
-		// Diagonal down-left evaluation
-		for (int row = 0; row < rows - 3; row++) { // Stop at row = 2
-			for (int col = 3; col < cols; col++) { // Start at column = 3, any lower is out of bound
+            if (fourCells[i] == max) {
+                maxCount++;
+            } else if (fourCells[i] == min) {
+                minCount++;
+            } else if (fourCells[i] == empty) {
+                emptyCount++;
+            }
+        }
 
-				int[] window = 
-			       {board[row][col],
-			        board[row + 1][col - 1],
-			        board[row + 2][col - 2],
-			        board[row + 3][col - 3]};
+        // MAX evaluation
+        if (maxCount == 4) {
+            return 10000;
+        } else if (maxCount == 3 && emptyCount == 1) {
+            return 100;
+        } else if (maxCount == 2 && emptyCount == 2) {
+            return 10;
+        }
 
-				score += evaluateFourCells(window);
-			}
-		}
-		return score;
-	}
-	
-	//Perform depth-limited Minimax with Alpha–Beta pruning.
-	public int minMax(ConnectFourGame game, int depth, int alpha, int beta, boolean maximizing){
-		
-		if(game.checkWinner(max)) { //Max wins
-			return 10000;
-		}
-		if(game.checkWinner(min)) { //Min wins
-			return -10000;
-		}
-		if(game.isDraw()) { //Draw
-			return 0;
-		}
-		if (depth == 0) { //Reached the depth limit
-		    return evaluateBoard(game.board);
-		}
-		if (maximizing) { //max search
+        // MIN evaluation
+        if (minCount == 4) {
+            return -10000;
+        } else if (minCount == 3 && emptyCount == 1) {
+            return -100;
+        } else if (minCount == 2 && emptyCount == 2) {
+            return -10;
+        }
 
-			int bestScore = Integer.MIN_VALUE; //Negative infinity
+        return 0;
+    }
 
-			for (int col = 0; col < cols; col++) {
-				if (game.isValidMove(col)) {
-					game.makeMove(col, max); //Simulate the move
+    // Calculate the score of the entire board
+    public int evaluateBoard(int[][] board) {
 
-					int score = minMax(game, depth - 1, alpha, beta, false); //Recursively evaluate the resulting
+        int score = 0;
 
-					undoMove(game, col); //Restore the original board.
+        // Horizontal
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols - 3; col++) {
 
-					if (score > bestScore) { //Select the highest score
-						bestScore = score;
-					}
-					if (bestScore > alpha) { //Update alpha
-					    alpha = bestScore;
-					}
-					if (alpha >= beta) { //Alpha-Beta pruning
-					    break;
-					}
-				}
-			}
-			
-			return bestScore;
-		}
-		else { //Min search
+                int[] window = {board[row][col], board[row][col + 1],
+                        board[row][col + 2], board[row][col + 3]};
 
-			int bestScore = Integer.MAX_VALUE; //Positive infinity
+                score += evaluateFourCells(window);
+            }
+        }
 
-			for (int col = 0; col < cols; col++) {
-				if (game.isValidMove(col)) {
-					game.makeMove(col, min); //Simulate the move
+        // Vertical
+        for (int row = 0; row < rows - 3; row++) {
+            for (int col = 0; col < cols; col++) {
 
-					int score = minMax(game, depth - 1, alpha, beta, true); //Recursively evaluate the resulting
+                int[] window = {board[row][col], board[row + 1][col],
+                        board[row + 2][col], board[row + 3][col]};
 
-					undoMove(game, col); //Restore the original board.
+                score += evaluateFourCells(window);
+            }
+        }
 
-					if (score < bestScore) { //Select the lowest score
-						bestScore = score;
-					}
-					if (bestScore < beta) { //Update beta
-					    beta = bestScore;
-					}
-					if (alpha >= beta) { //Alpha-Beta pruning
-					    break;
-					}
-				}
-			}
-			
-			return bestScore;
-		}
-	}
-	
-	//Remove the last simulated token from a column.
-	private void undoMove(ConnectFourGame game, int col) {
+        // Diagonal down-right
+        for (int row = 0; row < rows - 3; row++) {
+            for (int col = 0; col < cols - 3; col++) {
 
-	    for (int row = 0; row < rows; row++) {
+                int[] window = {board[row][col], board[row + 1][col + 1],
+                        board[row + 2][col + 2], board[row + 3][col + 3]};
 
-	        if (game.board[row][col] != empty) {
-	            game.board[row][col] = empty;
-	            break;}
-	   }
-	 }   
-	
-	
-	//Return the best column for the AI to play.
-	public int chooseMove(ConnectFourGame game, int player){
-		
-		if (game.checkWinner(max) || game.checkWinner(min)|| game.isDraw()) {
-		    return -1;
-		}
-		
-		int bestColumn = -1; //Stores column with best score
-	    int bestScore; //Stores best score found
+                score += evaluateFourCells(window);
+            }
+        }
 
-	    if (player == max) {
-	        bestScore = Integer.MIN_VALUE;
-	    } else {
-	        bestScore = Integer.MAX_VALUE;
-	    }
-	    
-	    for (int col = 0; col < cols; col++) {
+        // Diagonal down-left
+        for (int row = 0; row < rows - 3; row++) {
+            for (int col = 3; col < cols; col++) {
 
-	        if (game.isValidMove(col)) {
-	        	game.makeMove(col, player);
+                int[] window = {board[row][col], board[row + 1][col - 1],
+                        board[row + 2][col - 2], board[row + 3][col - 3]};
 
-	        	int score = minMax(game, depth - 1, Integer.MIN_VALUE, Integer.MAX_VALUE, player == min);
+                score += evaluateFourCells(window);
+            }
+        }
 
-	        	undoMove(game, col);
-	        	
-	        	if (player == max) {
+        return score;
+    }
 
-	        	    if (score > bestScore) {
-	        	        bestScore = score;
-	        	        bestColumn = col;
-	        	    }
+    // Minimax with Alpha-Beta pruning
+    public int minMax(ConnectFourGame game, int depth, int alpha,
+                      int beta, boolean maximizing) {
 
-	        	} else {
+        // Terminal conditions and depth limit
+        if (game.checkWinner(max)) {
+            return 10000;
+        } else if (game.checkWinner(min)) {
+            return -10000;
+        } else if (game.isDraw()) {
+            return 0;
+        } else if (depth == 0) {
+            return evaluateBoard(game.board);
+        }
 
-	        	    if (score < bestScore) {
-	        	        bestScore = score;
-	        	        bestColumn = col;
-	        	    }
-	        	}
-	        }
-	    }
-	    return bestColumn;
-	}
+        // MAX search
+        if (maximizing) {
+
+            int bestScore = Integer.MIN_VALUE;
+
+            for (int col = 0; col < cols; col++) {
+
+                if (game.isValidMove(col)) {
+
+                    // Simulate and evaluate the move
+                    game.makeMove(col, max);
+                    int score = minMax(game, depth - 1, alpha, beta, false);
+                    undoMove(game, col);
+
+                    // Select the highest score
+                    if (score > bestScore) {
+                        bestScore = score;
+                    }
+
+                    // Update alpha
+                    if (bestScore > alpha) {
+                        alpha = bestScore;
+                    }
+
+                    // Pruning
+                    if (alpha >= beta) {
+                        break;
+                    }
+                }
+            }
+
+            return bestScore;
+
+        } else {
+
+            // MIN search
+            int bestScore = Integer.MAX_VALUE;
+
+            for (int col = 0; col < cols; col++) {
+
+                if (game.isValidMove(col)) {
+
+                    // Simulate and evaluate the move
+                    game.makeMove(col, min);
+                    int score = minMax(game, depth - 1, alpha, beta, true);
+                    undoMove(game, col);
+
+                    // Select the lowest score
+                    if (score < bestScore) {
+                        bestScore = score;
+                    }
+
+                    // Update beta
+                    if (bestScore < beta) {
+                        beta = bestScore;
+                    }
+
+                    // Pruning
+                    if (alpha >= beta) {
+                        break;
+                    }
+                }
+            }
+
+            return bestScore;
+        }
+    }
+
+    // Remove the last simulated token
+    private void undoMove(ConnectFourGame game, int col) {
+
+        for (int row = 0; row < rows; row++) {
+
+            if (game.board[row][col] != empty) {
+                game.board[row][col] = empty;
+                break;
+            }
+        }
+    }
+
+    // Find the best column to play
+    public int chooseMove(ConnectFourGame game, int player) {
+
+        if (game.checkWinner(max) || game.checkWinner(min) || game.isDraw()) {
+            return -1;
+        }
+
+        int bestColumn = -1;
+        int bestScore;
+
+        if (player == max) {
+            bestScore = Integer.MIN_VALUE;
+        } else {
+            bestScore = Integer.MAX_VALUE;
+        }
+
+        // Test each valid column
+        for (int col = 0; col < cols; col++) {
+
+            if (game.isValidMove(col)) {
+
+                game.makeMove(col, player);
+
+                int score = minMax(game, depth - 1,
+                        Integer.MIN_VALUE, Integer.MAX_VALUE, player == min);
+
+                undoMove(game, col);
+
+                // Select the best move for MAX
+                if (player == max) {
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestColumn = col;
+                    }
+
+                } else {
+
+                    // Select the best move for MIN
+                    if (score < bestScore) {
+                        bestScore = score;
+                        bestColumn = col;
+                    }
+                }
+            }
+        }
+
+        return bestColumn;
+    }
 }
