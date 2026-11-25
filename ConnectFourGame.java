@@ -26,7 +26,7 @@ return board[0][column]==0;
 }
 public boolean makeMove(int column , int player){
 if (!isValidMove(column)){return false;}
-for (int row = 0 ; row <6; row--) {
+for (int row = 5; row >= 0; row--) {
    if (board[row][column]==0) {
 board[row][column]=player;
 return true;
