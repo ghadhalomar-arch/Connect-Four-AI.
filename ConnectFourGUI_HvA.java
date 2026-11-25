@@ -135,14 +135,9 @@ public class ConnectFourGUI_HvA extends JFrame {
             return;
         }
 
-        // Switch to the AI
+     // Switch to the AI
         currentPlayer = 2;
-        title.setText("AI IS THINKING...");
-
-        // Short delay before the AI plays
-        Timer timer = new Timer(300, e -> aiMove());
-        timer.setRepeats(false);
-        timer.start();
+        aiMove();
     }
 
     // Play the AI's move
