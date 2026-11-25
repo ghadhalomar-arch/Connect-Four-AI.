@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class ConnectFourGame {
 
 int[][] board;
-// initallizing the board
+// initalizing the board
 public void initiallizeBoard(){
 board = new int[6][7];
 }
@@ -17,7 +17,7 @@ System.out.print(board[i][j]+" ");}
 System.out.println();
 }
 }
-// which move is a vallid move 
+// which move is a valid move 
 public boolean isValidMove(int column){
 if (column>=7||column<0){
 return false;
@@ -41,7 +41,7 @@ for (int row = 0; row < 6; row++) {
     if (board[row][column]== player && board[row][column+1]== player && board[row][column+2]== player&&board[row][column+3]== player){return true;} 
     } 
 }
-    // vartical 
+    // vertical 
 for(int row = 0 ; row <3 ; row++) {
     for(int column =0 ; column<7;column++){ if (board[row][column]== player && board[row+1][column]== player && board[row+2][column]== player&&board[row+3][column]== player){return true;} 
     } }
@@ -58,7 +58,7 @@ for (int row = 0 ; row < 3 ; row++){
 
 return false; }
 
-//chaeck if there is a draw
+// check if there is a draw
 public boolean isDraw(){  
    for (int column = 0 ; column <7;column++){ // chack if there any place left
 if (isValidMove(column)){ return false;}   } return true;}
