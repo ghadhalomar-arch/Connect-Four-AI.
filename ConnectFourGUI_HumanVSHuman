@@ -24,7 +24,7 @@ public class ConnectFourGUI_HumanVSHuman extends JFrame {
     private final Color minColor = new Color(230, 80, 80);
 
     // Constructor
-    public ConnectFourGUI() {
+    public ConnectFourGUI_HumanVSHuman() {
 
         game = new ConnectFourGame();
         game.initiallizeBoard();
